@@ -37,11 +37,13 @@ void DynamicArray<T>::Resize(){
 template <typename T>
 DynamicArray<T>::DynamicArray() : 
     _data(nullptr), _max_size(0), _size(0){
+    std::cout << "A1A";
     this->Resize();
 }
 
 template <typename T>
 DynamicArray<T>::~DynamicArray(){
+    std::cout << "A2A";
     delete[] this->_data;
 }
 

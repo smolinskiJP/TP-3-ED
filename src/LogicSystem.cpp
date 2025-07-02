@@ -107,7 +107,7 @@ void LogicSystem::ProccessPackage(std::stringstream& string_file, long long time
 void LogicSystem::ProccessClient(std::stringstream& string_file, long long timestamp){
     std::string client_name;
     string_file >> client_name;
-    std::cout << std::setw(7) << std::setfill('0') << timestamp << " PC " << client_name << std::endl;
+    std::cout << std::setw(7) << std::setfill('0') << timestamp << " CL " << client_name << std::endl;
 
     DynamicArray<int>* client;
     try{

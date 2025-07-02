@@ -103,6 +103,7 @@ void AVL<K, V>::DeleteR(Node<K, V>* node){
     if(node){
         DeleteR(node->GetLeft());
         DeleteR(node->GetRight());
+        delete node->GetValue();
         delete node;
     }
 }
