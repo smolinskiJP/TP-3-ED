@@ -2,7 +2,7 @@
 #define EVENT_HPP
 
 #include <iostream>
-#include <cstdio>
+#include <iomanip>
 
 enum EventType{
     RG,
@@ -28,6 +28,7 @@ class Event{
 
     public:
         Event(long long timestamp, std::string type, int id);
+        Event();
         ~Event();
         void Print();
 

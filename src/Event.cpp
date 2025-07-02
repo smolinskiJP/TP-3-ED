@@ -1,30 +1,52 @@
 #include "Event.hpp"
 
 Event::Event(long long time, std::string type, int id) :
-    _time(time), _type(StringToType(type)), _id(id){
-        this->_origin = -1;
-        this->_destiny = -1;
-        this->_division = -1;
-        this->_sender = nullptr;
-        this->_receiver = nullptr;
-    }
+    _time(time), _type(StringToType(type)), _id(id), _origin(-1), _destiny(-1), _division(-1){}
+
+Event::Event() :
+    _time(-1), _type(NOT_VALID), _id(-1), _origin(-1), _destiny(-1), _division(-1){}
+
 
 Event::~Event(){}
 
 void Event::Print(){
-    switch(this->GetType()){
+    switch (this->GetType()) {
         case RG:
-            printf("%07lld EV RG %03d %s %s %03d %03d\n", this->_time, this->_id, this->_sender, this->_receiver, this->_origin, this->_destiny); break;
+            std::cout << std::setw(7) << std::setfill('0') << this->_time << " EV RG "
+                << std::setw(3) << std::setfill('0') << this->_id << " "
+                << this->_sender << " " << this->_receiver << " "
+                << std::setw(3) << std::setfill('0') << this->_origin << " "
+                << std::setw(3) << std::setfill('0') << this->_destiny << std::endl;
+            break;
         case AR:
-            printf("%07lld EV AR %03d %03d %03d\n", this->_time, this->_id, this->_destiny, this->_division); break;
+            std::cout << std::setw(7) << std::setfill('0') << this->_time << " EV AR "
+                << std::setw(3) << std::setfill('0') << this->_id << " "
+                << std::setw(3) << std::setfill('0') << this->_destiny << " "
+                << std::setw(3) << std::setfill('0') << this->_division << std::endl;
+            break;
         case RM:
-            printf("%07lld EV RM %03d %03d %03d\n", this->_time, this->_id, this->_destiny, this->_division); break;
+            std::cout << std::setw(7) << std::setfill('0') << this->_time << " EV RM "
+                << std::setw(3) << std::setfill('0') << this->_id << " "
+                << std::setw(3) << std::setfill('0') << this->_destiny << " "
+                << std::setw(3) << std::setfill('0') << this->_division << std::endl;
+            break;
         case UR:
-            printf("%07lld EV UR %03d %03d %03d\n", this->_time, this->_id, this->_destiny, this->_division); break;
+            std::cout << std::setw(7) << std::setfill('0') << this->_time << " EV UR "
+                << std::setw(3) << std::setfill('0') << this->_id << " "
+                << std::setw(3) << std::setfill('0') << this->_destiny << " "
+                << std::setw(3) << std::setfill('0') << this->_division << std::endl;
+            break;
         case TR:
-            printf("%07lld EV TR %03d %03d %03d\n", this->_time, this->_id, this->_origin, this->_destiny); break;
+            std::cout << std::setw(7) << std::setfill('0') << this->_time << " EV TR "
+                << std::setw(3) << std::setfill('0') << this->_id << " "
+                << std::setw(3) << std::setfill('0') << this->_origin << " "
+                << std::setw(3) << std::setfill('0') << this->_destiny << std::endl;
+            break;
         case EN:
-            printf("%07lld EV EN %03d %03d \n", this->_time, this->_id, this->_destiny); break;
+            std::cout << std::setw(7) << std::setfill('0') << this->_time << " EV EN "
+                << std::setw(3) << std::setfill('0') << this->_id << " "
+                << std::setw(3) << std::setfill('0') << this->_destiny << std::endl;
+            break;
         default: break;
     }
 }

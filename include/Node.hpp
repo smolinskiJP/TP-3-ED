@@ -29,31 +29,35 @@ class Node{
 };
 
 template <typename K, typename V>
-Node<K, V>::Node(K key, V value) : _key(key), _value(value), _left(nullptr), _right(nullptr), _height(0){}
+Node<K, V>::Node(K key, V value) : _key(key), _value(value), _right(nullptr), _left(nullptr), _height(0){}
 
 template <typename K, typename V>
 Node<K, V>::~Node(){}
 
 template <typename K, typename V>
 int Node<K, V>::GetHeight(){
-    return (!this) ? 0 : this->_height;
+    return this->_height;
 }
 
 template <typename K, typename V>
 void Node<K, V>::UpdateHeight(){
-    if(!this) return;
-    this->_height = 1 + Max(this->_left->GetHeight() - this->_right->GetHeight());
+    int left_h = -1, right_h = -1;
+    if(this->_left) left_h = this->_left->GetHeight();
+    if(this->_right) right_h = this->_right->GetHeight();
+    this->_height = 1 + Max(left_h, right_h);
 }
 
 template <typename K, typename V>
 int Node<K, V>::GetBalance(){
-    if(!this) return 0;
-    return this->_left->GetHeight() - this->_right->GetHeight();
+    int left_h = -1, right_h = -1;
+    if(this->_left) left_h = this->_left->GetHeight();
+    if(this->_right) right_h = this->_right->GetHeight();
+    return left_h - right_h;
 }
 
 template <typename K, typename V>
 int Node<K, V>::Max(int a, int b){
-    return (a > b) a : b;
+    return (a > b) ? a : b;
 }
 
 template <typename K, typename V>

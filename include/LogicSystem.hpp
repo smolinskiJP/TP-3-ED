@@ -8,7 +8,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cstdio>
 #include "AVL.hpp"
 #include "Event.hpp"
 #include "DynamicArray.hpp"
@@ -24,11 +23,11 @@ private:
     void ProccessClient(std::stringstream& string_file, long long timestamp);
     void ProccessPackage(std::stringstream& string_file, long long timestamp);
 public:
-    LogicSystem(std::ifstream& inFile);
     LogicSystem();
     ~LogicSystem();
 
     void Run();
+    void Run(std::ifstream& inFile);
 
 };
 

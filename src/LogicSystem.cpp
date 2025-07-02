@@ -1,6 +1,7 @@
 #include "LogicSystem.hpp"
 
 void LogicSystem::ProccessLine(const std::string& line) {
+    std::cout << line << "\n";
     std::stringstream string_file(line);
     long long timestamp;
     std::string line_type;
@@ -9,6 +10,7 @@ void LogicSystem::ProccessLine(const std::string& line) {
     if (line_type == EVENT) ProccessEvent(string_file, timestamp);
     else if (line_type == CLIENT) ProccessClient(string_file, timestamp);
     else if (line_type == PACKAGE) ProccessPackage(string_file, timestamp);
+    std::cout << "Terminei uma linha";
 }
 
 void LogicSystem::ProccessEvent(std::stringstream& string_file, long long timestamp) {
@@ -17,27 +19,24 @@ void LogicSystem::ProccessEvent(std::stringstream& string_file, long long timest
     string_file >> type >> id;
     Event event(timestamp, type, id);
     std::string sender, receiver;
+    int origin, destiny, division;
 
     switch (event.GetType()) {
-    case RG:
-        int origin, destiny;
-        string_file >> sender >> receiver >> origin >> destiny;
-        event.SetSender(sender); event.SetReceiver(receiver); event.SetOrigin(origin); event.SetDestiny(destiny); break;
-    case AR:
-    case RM:
-    case UR:
-        int destiny, division;
-        string_file >> destiny >> division;
-        event.SetDestiny(destiny); event.SetDivision(division); break;
-    case TR:
-        int origin, destiny;
-        string_file >> origin >> destiny;
-        event.SetOrigin(origin); event.SetDestiny(destiny); break;
-    case EN:
-        int destiny;
-        string_file >> destiny;
-        event.SetDestiny(destiny); break;
-    default: return;
+        case RG:
+            string_file >> sender >> receiver >> origin >> destiny;
+            event.SetSender(sender); event.SetReceiver(receiver); event.SetOrigin(origin); event.SetDestiny(destiny); break;
+        case AR:
+        case RM:
+        case UR:
+            string_file >> destiny >> division;
+            event.SetDestiny(destiny); event.SetDivision(division); break;
+        case TR:
+            string_file >> origin >> destiny;
+            event.SetOrigin(origin); event.SetDestiny(destiny); break;
+        case EN:
+            string_file >> destiny;
+            event.SetDestiny(destiny); break;
+        default: return;
     }
 
     this->_events.Push(event);
@@ -63,7 +62,7 @@ void LogicSystem::ProccessEvent(std::stringstream& string_file, long long timest
             sender = new DynamicArray<int>();
         }
 
-        sender->Push(new_index);
+        sender->Push(event.GetId());
         this->_clients.Insert(event.GetSender(), sender);
 
         DynamicArray<int>* receiver;
@@ -74,7 +73,7 @@ void LogicSystem::ProccessEvent(std::stringstream& string_file, long long timest
             receiver = new DynamicArray<int>();
         }
 
-        receiver->Push(new_index);
+        receiver->Push(event.GetId());
         this->_clients.Insert(event.GetReceiver(), receiver);
     }
 }
@@ -82,7 +81,7 @@ void LogicSystem::ProccessEvent(std::stringstream& string_file, long long timest
 void LogicSystem::ProccessPackage(std::stringstream& string_file, long long timestamp) {
     int id;
     string_file >> id;
-    printf("%07lld PC %03d\n", timestamp, id);
+    std::cout << std::setw(7) << std::setfill('0') << timestamp << " PC " << std::setw(3) << std::setfill('0') << id << std::endl;
 
     DynamicArray<int>* pack;
     try {
@@ -110,7 +109,7 @@ void LogicSystem::ProccessPackage(std::stringstream& string_file, long long time
 void LogicSystem::ProccessClient(std::stringstream& string_file, long long timestamp){
     std::string client_name;
     string_file >> client_name;
-    printf("%07lld CL %s\n", timestamp, client_name);
+    std::cout << std::setw(7) << std::setfill('0') << timestamp << " PC " << client_name << std::endl;
 
     DynamicArray<int>* client;
     try{
@@ -169,20 +168,19 @@ void LogicSystem::ProccessClient(std::stringstream& string_file, long long times
     }
 }
 
-LogicSystem::LogicSystem(std::ifstream& inFile) {
-    std::string line;
-    while (std::getline(inFile, line)) if (!line.empty()) ProccessLine(line);
-}
+LogicSystem::LogicSystem() {}
 
-LogicSystem::LogicSystem() {
-    std::string line;
-    while (std::getline(std::cin, line)) if (!line.empty()) ProccessLine(line);
-}
 
 LogicSystem::~LogicSystem() {
 
 }
 
-void LogicSystem::Run() {
+void LogicSystem::Run(std::ifstream& inFile) {
+    std::string line;
+    while (std::getline(inFile, line)) if (!line.empty()) ProccessLine(line);
+}
 
+void LogicSystem::Run() {
+    std::string line;
+    while (std::getline(std::cin, line)) if (!line.empty()) ProccessLine(line);
 }
