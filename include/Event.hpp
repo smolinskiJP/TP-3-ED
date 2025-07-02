@@ -37,7 +37,9 @@ class Event{
         EventType GetType();
         int GetId();
 
+        int GetOrigin();
         void SetOrigin(int value);
+        int GetDestiny();
         void SetDestiny(int value);
         void SetDivision(int value);
 

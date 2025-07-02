@@ -72,9 +72,19 @@ int Event::GetId() {
     return this->_id;
 }
 
+//Retorna a origem do pacote ligado ao evento
+int Event::GetOrigin() {
+    return this->_origin;
+}
+
 //Define a origem do pacote
 void Event::SetOrigin(int value) {
     this->_origin = value;
+}
+
+//Retorna o destino do pacote ligado ao evento
+int Event::GetDestiny() {
+    return this->_destiny;
 }
 
 //Define o destino do pacote

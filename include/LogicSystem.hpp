@@ -4,6 +4,7 @@
 #define EVENT "EV"
 #define CLIENT "CL"
 #define PACKAGE "PC"
+#define STORAGE "AM"
 
 #include <iostream>
 #include <fstream>
@@ -22,6 +23,7 @@ private:
     void ProccessEvent(std::stringstream& string_file, long long timestamp);
     void ProccessClient(std::stringstream& string_file, long long timestamp);
     void ProccessPackage(std::stringstream& string_file, long long timestamp);
+    void ProccessStorage(std::stringstream& string_file, long long timestamp);
 public:
     LogicSystem();
     ~LogicSystem();

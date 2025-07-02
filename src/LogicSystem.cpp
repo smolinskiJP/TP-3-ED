@@ -10,9 +10,10 @@ void LogicSystem::ProccessLine(const std::string& line) {
     string_file >> timestamp >> line_type;
 
     //Decide se vai chamar o processador de evento, consulta de cliente ou consulta de pacote
-    if (line_type == EVENT) ProccessEvent(string_file, timestamp);
-    else if (line_type == CLIENT) ProccessClient(string_file, timestamp);
-    else if (line_type == PACKAGE) ProccessPackage(string_file, timestamp);
+    if (line_type == EVENT) this->ProccessEvent(string_file, timestamp);
+    else if (line_type == CLIENT) this->ProccessClient(string_file, timestamp);
+    else if (line_type == PACKAGE) this->ProccessPackage(string_file, timestamp);
+    else if (line_type == STORAGE) this->ProccessStorage(string_file, timestamp);
 }
 
 //Funcao que processa um evento
@@ -202,6 +203,90 @@ void LogicSystem::ProccessClient(std::stringstream& string_file, long long times
     for (int i = 0; i < client_packs.GetSize(); i++) {
         //Imprime cada evento
         client_packs[i].Print();
+    }
+}
+
+//Funcao que processa uma consulta de tempo em armazem
+void LogicSystem::ProccessStorage(std::stringstream& string_file, long long timestamp){
+    long long start_time, stop_time;
+    int store_id;
+    //Pega o tempo de inicio e fim do periodo consultado alem do armazem
+    string_file >> start_time >> stop_time >> store_id;
+    //Imprime o log da "Query"
+    std::cout << std::setw(6) << std::setfill('0') << timestamp << " AM " 
+        << std::setw(6) << std::setfill('0') << start_time << " "
+        << std::setw(6) << std::setfill('0') << stop_time << " "
+        << std::setw(3) << std::setfill('0') << store_id << std::endl;
+    
+    //Cria o array de eventos a serem impressos
+    DynamicArray<int> time_events;
+
+    //O indice de inicio inicia com valor -1 como flag
+    int start = -1;
+
+    //Inicia os limites da busca binaria
+    int low = 0, high = this->_events.GetSize() - 1;
+
+    //Enquanto ainda nao convergir
+    while(low <= high){
+        //Acha o valor central
+        int mid = (low + high) / 2;
+        //Se o tempo do evento for maior do que o tempo de inicio atualiza o indice de inicio e diminui o teto da busca
+        if(this->_events[mid].GetTime() >= start_time){
+            start = mid;
+            high = mid - 1;
+        }
+        else {
+        //Caso contrario aumenta o piso da busca
+            low = mid + 1;
+        }
+    }
+
+    //Se nao tiver encontrado nenhum evento a partir do start_time imprime 0 logs
+    if(start == -1){
+        std::cout << 0 << std::endl;
+        return;
+    }
+
+    //Todos os eventos no intervalo estao a partir do indice de inicio
+    for(int i = start + 1; i < this->_events.GetSize(); i++){
+        //Pega o evento relativo
+        Event event = this->_events[i];
+
+        //Se tiver passado do tempo de parada, encerra a consulta
+        if(event.GetTime() > stop_time) break;
+
+
+        //Dado o evento, devemos filtrar para saber se esta envolvido no armazem que desejamos
+        /*Vamos considerar movimentos em um armazem:
+        Eventos:
+        - TR, armazem de origem (Parte do armazem).
+        - RM, armazem de destino (Chega no armazem).
+        - UR, armazem de destino (Chega no armazem).
+        - AR, armazem de destino (Chega no armazem).
+        - EN, armazem de destino (Chega no armazem).
+
+        Para o registro, nao sera considerado uma movimentacao de armazem
+        */
+        switch(event.GetType()){
+            case TR: //Transporte
+                if(event.GetOrigin() == store_id) time_events.Push(i);
+                break;
+            case RM: //Remocao
+            case UR: //Rearmazenamento
+            case AR: //Armazenamento
+            case EN: //Entrega
+                if(event.GetDestiny() == store_id) time_events.Push(i);
+                break;
+            default: break; //Registro e outros caem aqui    
+        }
+    }
+
+    //Com todos os eventos que vamos imprimir, imprimimos o numero de linhas do log
+    std::cout << time_events.GetSize() << std::endl;
+    for (int i = 0; i < time_events.GetSize(); i++) {
+        //Imprime cada evento
+        this->_events[time_events[i]].Print();
     }
 }
 
