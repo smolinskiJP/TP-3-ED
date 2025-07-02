@@ -1,15 +1,16 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-template <typename T>
+template <typename K, typename V>
 class Node{
     private:
-        T _data;
-        Node* _right;
-        Node* _left;
+        K _key;
+        V _value;
+        Node<K, V>* _right;
+        Node<K, V>* _left;  
         int _height;
     public:
-        Node(T data);
+        Node(K key, V value);
         ~Node();
 
         int GetHeight();
@@ -17,65 +18,77 @@ class Node{
         int GetBalance();
         int Max(int a, int b);
         
-        Node<T>* GetRight();
-        void SetRight(Node<T>* value);
-        Node<T>* GetLeft();
-        void SetLeft(Node<T>* value);
+        Node<K, V>* GetRight();
+        void SetRight(Node<K, V>* value);
+        Node<K, V>* GetLeft();
+        void SetLeft(Node<K, V>* value);
 
-        T GetData();
+        V GetValue();
+        void SetValue(V value);
+        K GetKey();
 };
 
-template <typename T>
-Node<T>::Node(T data) : _data(data), _left(nullptr), _right(nullptr), _height(1){}
+template <typename K, typename V>
+Node<K, V>::Node(K key, V value) : _key(key), _value(value), _left(nullptr), _right(nullptr), _height(0){}
 
-template <typename T>
-Node<T>::~Node(){}
+template <typename K, typename V>
+Node<K, V>::~Node(){}
 
-template <typename T>
-int Node<T>::GetHeight(){
+template <typename K, typename V>
+int Node<K, V>::GetHeight(){
     return (!this) ? 0 : this->_height;
 }
 
-template <typename T>
-void Node<T>::UpdateHeight(){
+template <typename K, typename V>
+void Node<K, V>::UpdateHeight(){
     if(!this) return;
     this->_height = 1 + Max(this->_left->GetHeight() - this->_right->GetHeight());
 }
 
-template <typename T>
-int Node<T>::GetBalance(){
+template <typename K, typename V>
+int Node<K, V>::GetBalance(){
     if(!this) return 0;
     return this->_left->GetHeight() - this->_right->GetHeight();
 }
 
-template <typename T>
-int Node<T>::Max(int a, int b){
+template <typename K, typename V>
+int Node<K, V>::Max(int a, int b){
     return (a > b) a : b;
 }
 
-template <typename T>
-Node<T>* Node<T>::GetRight(){
+template <typename K, typename V>
+Node<K, V>* Node<K, V>::GetRight(){
     return this->_right;
 }
 
-template <typename T>
-void Node<T>::SetRight(Node<T>* value){
+template <typename K, typename V>
+void Node<K, V>::SetRight(Node<K, V>* value){
     this->_right = value;
 }
 
-template <typename T>
-Node<T>* Node<T>::GetLeft(){
+template <typename K, typename V>
+Node<K, V>* Node<K, V>::GetLeft(){
     return this->_left;
 }
 
-template <typename T>
-void Node<T>::SetLeft(Node<T>* value){
+template <typename K, typename V>
+void Node<K, V>::SetLeft(Node<K, V>* value){
     this->_left = value;
 }
 
-template <typename T>
-T Node<T>::GetData(){
-    return this->_data;
+template <typename K, typename V>
+V Node<K, V>::GetValue(){
+    return this->_value;
+}
+
+template <typename K, typename V>
+void Node<K, V>::SetValue(V value){
+    this->_value = value;
+}
+
+template <typename K, typename V>
+K Node<K, V>::GetKey(){
+    return this->_key;
 }
 
 #endif

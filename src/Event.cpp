@@ -1,11 +1,33 @@
 #include "Event.hpp"
 
 Event::Event(long long time, std::string type, int id) :
-    _time(time), _type(StringToType(type)), _id(id){}
+    _time(time), _type(StringToType(type)), _id(id){
+        this->_origin = -1;
+        this->_destiny = -1;
+        this->_division = -1;
+        this->_sender = nullptr;
+        this->_receiver = nullptr;
+    }
 
 Event::~Event(){}
 
-void Event::Print(){}
+void Event::Print(){
+    switch(this->GetType()){
+        case RG:
+            printf("%07lld EV RG %03d %s %s %03d %03d\n", this->_time, this->_id, this->_sender, this->_receiver, this->_origin, this->_destiny); break;
+        case AR:
+            printf("%07lld EV AR %03d %03d %03d\n", this->_time, this->_id, this->_destiny, this->_division); break;
+        case RM:
+            printf("%07lld EV RM %03d %03d %03d\n", this->_time, this->_id, this->_destiny, this->_division); break;
+        case UR:
+            printf("%07lld EV UR %03d %03d %03d\n", this->_time, this->_id, this->_destiny, this->_division); break;
+        case TR:
+            printf("%07lld EV TR %03d %03d %03d\n", this->_time, this->_id, this->_origin, this->_destiny); break;
+        case EN:
+            printf("%07lld EV EN %03d %03d \n", this->_time, this->_id, this->_destiny); break;
+        default: break;
+    }
+}
 
 long long Event::GetTime(){
     return this->_time;

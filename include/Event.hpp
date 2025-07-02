@@ -2,6 +2,7 @@
 #define EVENT_HPP
 
 #include <iostream>
+#include <cstdio>
 
 enum EventType{
     RG,
@@ -18,7 +19,6 @@ class Event{
         long long _time;
         EventType _type;
         int _id;
-        std::string _client;
 
         int _origin;
         int _destiny;

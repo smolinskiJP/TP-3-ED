@@ -4,30 +4,30 @@
 #include <iostream>
 #include "Node.hpp"
 
-template <typename T>
+template <typename K, typename V>
 class AVL{
     private:
-        Node<T>* _root;
+        Node<K, V>* _root;
 
-        Node<T>* RotateRight(Node<T>* node);
-        Node<T>* RotateLeft(Node<T>* node);
+        Node<K, V>* RotateRight(Node<K, V>* node);
+        Node<K, V>* RotateLeft(Node<K, V>* node);
         
-        Node<T>* InsertR(Node<T>* node, T data);
-        Node<T>* FindR(Node<T>* node, T data);
-        void DeleteR(Node<T>* node);
+        Node<K, V>* InsertR(Node<K, V>* node, K key, V value);
+        Node<K, V>* FindR(Node<K, V>* node, K key);
+        void DeleteR(Node<K, V>* node);
 
     public:
         AVL();
         ~AVL();
 
-        void Insert(T data);
-        T* Find(T data);
+        void Insert(K key, V value);
+        V Find(K key);
 };
 
-template <typename T>
-Node<T>* AVL<T>::RotateRight(Node<T>* node){
-    Node<T>* new_parent = node->GetLeft();
-    Node<T>* new_left_child = new_parent->GetRight();
+template <typename K, typename V>
+Node<K, V>* AVL<K, V>::RotateRight(Node<K, V>* node){
+    Node<K, V>* new_parent = node->GetLeft();
+    Node<K, V>* new_left_child = new_parent->GetRight();
 
     new_parent->SetRight(node);
     node->SetLeft(new_left_child);
@@ -36,10 +36,10 @@ Node<T>* AVL<T>::RotateRight(Node<T>* node){
     new_parent->UpdateHeight();
 }
 
-template <typename T>
-Node<T>* AVL<T>::RotateLeft(Node<T>* node){
-    Node<T>* new_parent = node->GetRight();
-    Node<T>* new_right_child = new_parent->GetLeft();
+template <typename K, typename V>
+Node<K, V>* AVL<K, V>::RotateLeft(Node<K, V>* node){
+    Node<K, V>* new_parent = node->GetRight();
+    Node<K, V>* new_right_child = new_parent->GetLeft();
 
     new_parent->SetLeft(node);
     node->SetRight(new_right_child);
@@ -48,41 +48,44 @@ Node<T>* AVL<T>::RotateLeft(Node<T>* node){
     new_parent->UpdateHeight();
 }
 
-template <typename T>
-Node<T>* AVL<T>::InsertR(Node<T>* node, T data){
-    if(!node) return new Node<T>(data);
+template <typename K, typename V>
+Node<K, V>* AVL<K, V>::InsertR(Node<K, V>* node, K key, V value){
+    if(!node) return new Node<K, V>(key, value);
 
-    if (data < node->GetData()) node->SetLeft(InsertR(node->GetLeft(), data));
-    else if (data > node->GetData()) node->SetRight(InsertR(node->GetRight(), data));
-    else return node;
+    if (key < node->GetKey()) node->SetLeft(InsertR(node->GetLeft(), key, value));
+    else if (key > node->GetKey()) node->SetRight(InsertR(node->GetRight(), key, value));
+    else{
+        node->SetValue(value);
+        return node;
+    }
 
     node->UpdateHeight();
     int balance = node->GetBalance();
 
     if(balance < 1 && balance > -1) return node;
-    if (balance > 1 && data < node->GetLeft()->GetData()) return this->RotateRight(node);
-    if (balance > 1 && data > node->GetLeft()->GetData()) {
+    if (balance > 1 && key < node->GetLeft()->GetKey()) return this->RotateRight(node);
+    if (balance > 1 && key > node->GetLeft()->GetKey()) {
         node->SetLeft(this->RotateLeft(node->GetLeft()));
         return this->RotateRight(node);
     }
-    if (balance < -1 && data > node->GetRight()->GetData()) return this->RotateLeft(node);
-    if (balance < -1 && data < node->GetRight()->GetData()) {
+    if (balance < -1 && key > node->GetRight()->GetKey()) return this->RotateLeft(node);
+    if (balance < -1 && key < node->GetRight()->GetKey()) {
         node->SetRight(this->RotateRight(node->GetRight()));
         return this->RotateLeft(node);
     }
 }
 
-template <typename T>
-Node<T>* AVL<T>::FindR(Node<T>* node, T data){
+template <typename K, typename V>
+Node<K, V>* AVL<K, V>::FindR(Node<K, V>* node, K key){
     if(!node) return nullptr;
 
-    if(data < node->GetData()) return FindR(node->GetLeft(), data);
-    if(data > node->GetData()) return FindR(node->GetRight(), data);
+    if(key < node->GetKey()) return FindR(node->GetLeft(), key);
+    if(key > node->GetKey()) return FindR(node->GetRight(), key);
     return node;
 }
 
-template <typename T>
-void AVL<T>::DeleteR(Node<T>* node){
+template <typename K, typename V>
+void AVL<K, V>::DeleteR(Node<K, V>* node){
     if(node){
         DeleteR(node->GetLeft());
         DeleteR(node->GetRight());
@@ -90,23 +93,24 @@ void AVL<T>::DeleteR(Node<T>* node){
     }
 }
 
-template <typename T>
-AVL<T>::AVL() : _root(nullptr){}
+template <typename K, typename V>
+AVL<K, V>::AVL() : _root(nullptr){}
 
-template <typename T>
-AVL<T>::~AVL(){
+template <typename K, typename V>
+AVL<K, V>::~AVL(){
     this->DeleteR(this->_root);
 }
 
-template <typename T>
-void AVL<T>::Insert(T data){
-    this->_root = this->InsertR(this->_root, data);
+template <typename K, typename V>
+void AVL<K, V>::Insert(K key, V value){
+    this->_root = this->InsertR(this->_root, key, value);
 }
 
-template <typename T>
-T* AVL<T>::Find(T data){
-    Node<T>* result = this->FindR(this->_root, data);
-    return (result) ? &(result->GetData()) : nullptr;
+template <typename K, typename V>
+V AVL<K, V>::Find(K key){
+    Node<K, V>* result = this->FindR(this->_root, key);
+    if(result) return result->GetValue();
+    throw std::logic_error("Value not found in AVL");
 }
 
 #endif
