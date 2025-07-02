@@ -9,6 +9,7 @@ int main(int argv, char ** argc){
     //Pega o arquivo passado por parâmetro (se existir)
     std::ifstream inFile(argc[1]);
 
+    //Inicia o sistema
     LogicSystem* system = new LogicSystem();
 
     try{

@@ -4,14 +4,15 @@
 #include <iostream>
 #include <iomanip>
 
+//Enum dos tipos de evento que um evento pode assumir
 enum EventType{
-    RG,
-    AR,
-    RM,
-    UR,
-    TR,
-    EN,
-    NOT_VALID
+    RG, //Registro
+    AR, //Armazenamento
+    RM, //Remocao
+    UR, //Rearmazenamento
+    TR, //Transporte
+    EN, //Entrega
+    NOT_VALID //Tipo "Nulo"
 };
 
 class Event{
@@ -33,21 +34,11 @@ class Event{
         void Print();
 
         long long GetTime();
-        void SetTime(long long value);
-
         EventType GetType();
-        void SetType(EventType value);
-        
         int GetId();
-        void SetId(int value);
 
-        int GetOrigin();
         void SetOrigin(int value);
-        
-        int GetDestiny();
         void SetDestiny(int value);
-        
-        int GetDivision();
         void SetDivision(int value);
 
         std::string GetSender();
