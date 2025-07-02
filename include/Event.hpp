@@ -57,7 +57,10 @@ class Event{
         void SetReceiver(std::string value);
 
         EventType StringToType(const std::string& s);
-        
+
+        Event& operator=(const Event& other);
+        bool operator<(const Event& other);
+        bool operator>(const Event& other);
 };
 
 #endif
