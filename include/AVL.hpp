@@ -22,8 +22,6 @@ class AVL{
 
         void Insert(K key, V value);
         V Find(K key);
-
-        void Print();
 };
 
 template <typename K, typename V>
@@ -68,15 +66,27 @@ Node<K, V>* AVL<K, V>::InsertR(Node<K, V>* node, K key, V value){
     node->UpdateHeight();
     int balance = node->GetBalance();
 
-    if(balance < 1 && balance > -1) return node;
-    if (balance > 1 && key < node->GetLeft()->GetKey()) return this->RotateRight(node);
+    // Caso Esquerda-Esquerda
+    if (balance > 1 && key < node->GetLeft()->GetKey()) 
+        return this->RotateRight(node);
+    
+    // Caso Direita-Direita
+    if (balance < -1 && key > node->GetRight()->GetKey()) 
+        return this->RotateLeft(node);
+
+    // Caso Esquerda-Direita
     if (balance > 1 && key > node->GetLeft()->GetKey()) {
         node->SetLeft(this->RotateLeft(node->GetLeft()));
         return this->RotateRight(node);
     }
-    if (balance < -1 && key > node->GetRight()->GetKey()) return this->RotateLeft(node);
-    node->SetRight(this->RotateRight(node->GetRight()));
-    return this->RotateLeft(node);
+    
+    // Caso Direita-Esquerda
+    if (balance < -1 && key < node->GetRight()->GetKey()){
+        node->SetRight(this->RotateRight(node->GetRight()));
+        return this->RotateLeft(node);
+    }
+
+    return node;
 }
 
 template <typename K, typename V>

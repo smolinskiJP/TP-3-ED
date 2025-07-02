@@ -1,7 +1,6 @@
 #include "LogicSystem.hpp"
 
 void LogicSystem::ProccessLine(const std::string& line) {
-    std::cout << line << "\n";
     std::stringstream string_file(line);
     long long timestamp;
     std::string line_type;
@@ -10,7 +9,6 @@ void LogicSystem::ProccessLine(const std::string& line) {
     if (line_type == EVENT) ProccessEvent(string_file, timestamp);
     else if (line_type == CLIENT) ProccessClient(string_file, timestamp);
     else if (line_type == PACKAGE) ProccessPackage(string_file, timestamp);
-    std::cout << "Terminei uma linha";
 }
 
 void LogicSystem::ProccessEvent(std::stringstream& string_file, long long timestamp) {
