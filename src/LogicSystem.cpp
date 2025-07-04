@@ -116,27 +116,11 @@ void LogicSystem::ProccessPackage(std::stringstream& string_file, long long time
         return;
     }
 
-    //Cria o array de eventos a serem impressos
-    DynamicArray<int> pack_events;
-    //Para cada index de evento, verifica se sera impresso ou nao
-    for (int i = 0; i < pack->GetSize(); i++) {
-
-        //Pega o evento relacionado
-        int event_index = (*pack)[i];
-        Event event = this->_events[event_index];
-
-        //Como os eventos de cada pacote esta ordenado naturalmente, quando encontra o primeiro que passou do tempo requisitado encerra a pesquisa
-        if (event.GetTime() > timestamp) break;
-
-        //Adiciona o index do evento no array a ser impresso
-        pack_events.Push(event_index);
-    }
-
     //Imprime a quantidade de linhas do log
-    std::cout << pack_events.GetSize() << std::endl;
-    for (int i = 0; i < pack_events.GetSize(); i++) {
+    std::cout << pack->GetSize() << std::endl;
+    for (int i = 0; i < pack->GetSize(); i++) {
         //Imprime cada evento
-        this->_events[pack_events[i]].Print();
+        this->_events[(*pack)[i]].Print();
     }
 }
 
