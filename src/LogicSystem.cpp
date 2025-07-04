@@ -179,20 +179,12 @@ void LogicSystem::ProccessClient(std::stringstream& string_file, long long times
         //Adiciona o primeiro evento (registro)
         int reg_index = (*pack)[0];
         Event first = this->_events[reg_index];
-        if (first.GetTime() < timestamp) client_packs.Push(first);
+        client_packs.Push(first);
 
-        //Procura o ultimo evento do pacote antes do timestamp
-        Event last_seen;        
-        for (int j = 1; j < pack->GetSize(); j++) {
-            int event_index = (*pack)[j];
-            Event event = this->_events[event_index];
-            if (event.GetTime() > timestamp) break;
-            last_seen = event;
-        }
-        //Se encontrou algum evento adiciona nos eventos a serem impressos
-        if (last_seen.GetId() != -1) {
-            client_packs.Push(last_seen);
-        }
+        //Adiciona o ultimo evento
+        int last_index = (*pack)[pack->GetSize() - 1];
+        Event last = this->_events[last_index];
+        client_packs.Push(last);
     }
 
     //Ordena os eventos em ordem cronologica
