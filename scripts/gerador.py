@@ -89,7 +89,7 @@ def criar_arquivo_entrada(path, params):
         for linha in todas_as_linhas:
             f.write(linha + "\n")
 
-# --- FUNÇÕES DE GERAÇÃO DE CENÁRIOS DE TESTE (CORRIGIDAS) ---
+# --- FUNÇÕES DE GERAÇÃO DE CENÁRIOS DE TESTE ---
 
 def gerar_cenarios_variando_clientes(base_path, num_arquivos=100):
     """Gera cenários variando continuamente o número de clientes."""
@@ -97,7 +97,6 @@ def gerar_cenarios_variando_clientes(base_path, num_arquivos=100):
         os.makedirs(base_path)
     print(f"Gerando {num_arquivos} cenários variando clientes em '{base_path}'...")
 
-    # Parâmetros base (fixos)
     params_base = {
         'num_pacotes': 1000,
         'eventos_por_pacote': 10,
@@ -106,9 +105,7 @@ def gerar_cenarios_variando_clientes(base_path, num_arquivos=100):
 
     for i in range(num_arquivos):
         params = params_base.copy()
-        # Varia o número de clientes continuamente
         params['num_clientes'] = random.randint(10, 500)
-        
         nome_arquivo = f"clientes_{i+1:03d}_C{params['num_clientes']}.txt"
         criar_arquivo_entrada(os.path.join(base_path, nome_arquivo), params)
 
@@ -118,7 +115,6 @@ def gerar_cenarios_variando_pacotes(base_path, num_arquivos=100):
         os.makedirs(base_path)
     print(f"Gerando {num_arquivos} cenários variando pacotes em '{base_path}'...")
     
-    # Parâmetros base (fixos)
     params_base = {
         'num_clientes': 100,
         'eventos_por_pacote': 10,
@@ -127,9 +123,7 @@ def gerar_cenarios_variando_pacotes(base_path, num_arquivos=100):
     
     for i in range(num_arquivos):
         params = params_base.copy()
-        # Varia o número de pacotes continuamente
         params['num_pacotes'] = random.randint(100, 5000)
-        
         nome_arquivo = f"pacotes_{i+1:03d}_P{params['num_pacotes']}.txt"
         criar_arquivo_entrada(os.path.join(base_path, nome_arquivo), params)
         
@@ -139,7 +133,6 @@ def gerar_cenarios_variando_consultas(base_path, num_arquivos=100):
         os.makedirs(base_path)
     print(f"Gerando {num_arquivos} cenários variando consultas em '{base_path}'...")
 
-    # Parâmetros base (fixos)
     params_base = {
         'num_pacotes': 1000,
         'num_clientes': 100,
@@ -148,10 +141,30 @@ def gerar_cenarios_variando_consultas(base_path, num_arquivos=100):
 
     for i in range(num_arquivos):
         params = params_base.copy()
-        # Varia o número de consultas continuamente
         params['num_consultas'] = random.randint(100, 5000)
-        
         nome_arquivo = f"consultas_{i+1:03d}_Q{params['num_consultas']}.txt"
+        criar_arquivo_entrada(os.path.join(base_path, nome_arquivo), params)
+
+# NOVO: Função para gerar cenários variando o número de eventos por pacote
+def gerar_cenarios_variando_eventos(base_path, num_arquivos=100):
+    """Gera cenários variando continuamente o número de eventos por pacote."""
+    if not os.path.exists(base_path):
+        os.makedirs(base_path)
+    print(f"Gerando {num_arquivos} cenários variando eventos por pacote em '{base_path}'...")
+
+    # Parâmetros base (fixos)
+    params_base = {
+        'num_pacotes': 500,
+        'num_clientes': 100,
+        'num_consultas': 200
+    }
+
+    for i in range(num_arquivos):
+        params = params_base.copy()
+        # Varia o número de eventos por pacote continuamente
+        params['eventos_por_pacote'] = random.randint(5, 500)
+        
+        nome_arquivo = f"eventos_{i+1:03d}_E{params['eventos_por_pacote']}.txt"
         criar_arquivo_entrada(os.path.join(base_path, nome_arquivo), params)
 
 # --- EXECUÇÃO PRINCIPAL ---
@@ -160,9 +173,10 @@ if __name__ == "__main__":
     random.seed(42) # Para resultados reproduzíveis
     base_dir = "entradas_geradas_tp3"
     
-    # Gera 200 arquivos de teste para cada cenário, variando um parâmetro de cada vez
+    # Gera 200 arquivos de teste para cada cenário
     gerar_cenarios_variando_clientes(os.path.join(base_dir, "variando_clientes"), num_arquivos=200)
     gerar_cenarios_variando_pacotes(os.path.join(base_dir, "variando_pacotes"), num_arquivos=200)
     gerar_cenarios_variando_consultas(os.path.join(base_dir, "variando_consultas"), num_arquivos=200)
+    gerar_cenarios_variando_eventos(os.path.join(base_dir, "variando_eventos"), num_arquivos=200)
     
     print(f"\nArquivos de entrada gerados com sucesso no diretório '{base_dir}'!")
